@@ -1,5 +1,5 @@
 import { describe, expect, it } from "bun:test";
-import { HunkSchema, SectionSchema, TourPlanSchema } from "../src/schema.ts";
+import { HunkSchema, SectionSchema, TourPlanSchema, LLMTourPlanSchema } from "../src/schema.ts";
 
 const validHunk = {
   file: "src/validators/email.ts",
@@ -86,5 +86,26 @@ describe("TourPlanSchema", () => {
     };
     const result = TourPlanSchema.parse(plan);
     expect(result.sections).toHaveLength(2);
+  });
+});
+
+describe("LLMTourPlanSchema", () => {
+  it("validates a well-formed LLM response with hunk_ids", () => {
+    const result = LLMTourPlanSchema.parse({
+      title: "Test",
+      summary: "Test summary",
+      sections: [{ heading: "S1", explanation: "E1", hunk_ids: [0, 2, 5] }],
+    });
+    expect(result.sections[0].hunk_ids).toEqual([0, 2, 5]);
+  });
+
+  it("rejects sections with hunks array instead of hunk_ids", () => {
+    expect(() =>
+      LLMTourPlanSchema.parse({
+        title: "Test",
+        summary: "Test",
+        sections: [{ heading: "S1", explanation: "E1", hunks: [] }],
+      }),
+    ).toThrow();
   });
 });

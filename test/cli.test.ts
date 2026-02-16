@@ -64,8 +64,7 @@ describe("CLI", () => {
   });
 
   it("exits with non-zero code if ANTHROPIC_API_KEY is missing", async () => {
-    const env = { ...process.env };
-    delete env.ANTHROPIC_API_KEY;
+    const env = { ...process.env, ANTHROPIC_API_KEY: "" };
     const proc = Bun.spawn(["bun", "run", "src/cli.ts", testDiffFile], {
       cwd: testDir,
       stdout: "pipe",
@@ -81,8 +80,7 @@ describe("CLI", () => {
   it("reads diff from a file path argument", async () => {
     // This will fail at the API call step (no real key), but it should get past
     // input reading and validation
-    const env = { ...process.env };
-    delete env.ANTHROPIC_API_KEY;
+    const env = { ...process.env, ANTHROPIC_API_KEY: "" };
     const proc = Bun.spawn(["bun", "run", "src/cli.ts", testDiffFile], {
       cwd: testDir,
       stdout: "pipe",

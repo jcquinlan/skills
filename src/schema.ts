@@ -24,3 +24,21 @@ export const TourPlanSchema = z.object({
 });
 
 export type TourPlan = z.infer<typeof TourPlanSchema>;
+
+// Lightweight schema for LLM responses — references hunks by index instead of
+// echoing back the full diff text, cutting response size dramatically.
+export const LLMSectionSchema = z.object({
+  heading: z.string(),
+  explanation: z.string(),
+  hunk_ids: z.array(z.number()),
+});
+
+export type LLMSection = z.infer<typeof LLMSectionSchema>;
+
+export const LLMTourPlanSchema = z.object({
+  title: z.string(),
+  summary: z.string(),
+  sections: z.array(LLMSectionSchema),
+});
+
+export type LLMTourPlan = z.infer<typeof LLMTourPlanSchema>;

@@ -208,7 +208,11 @@ describe("Error handling: analyze.ts", () => {
     mock.module("@anthropic-ai/sdk", () => ({
       default: class {
         messages = {
-          create: () => Promise.reject(new Error("Connection refused")),
+          create: () => ({
+            async *[Symbol.asyncIterator]() {
+              throw new Error("Connection refused");
+            },
+          }),
         };
       },
     }));

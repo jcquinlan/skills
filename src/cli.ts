@@ -103,15 +103,38 @@ export async function main(argv: string[] = process.argv.slice(2)): Promise<void
     process.exit(1);
   }
 
-  console.error(`Analyzing ${hunks.length} hunk(s) across ${new Set(hunks.map((h) => h.file)).size} file(s)...`);
+  const files = [...new Set(hunks.map((h) => h.file))];
+  console.error(`Parsed ${hunks.length} hunk(s) across ${files.length} file(s):`);
+  for (const f of files) {
+    console.error(`  ${f}`);
+  }
+  console.error("");
 
-  const plan = await analyzeDiff(hunks, { title: args.title });
+  const isTTY = process.stderr.isTTY;
 
-  console.error("Rendering tour...");
+  const plan = await analyzeDiff(hunks, {
+    title: args.title,
+    onLog: (msg) => console.error(msg),
+    onProgress: (chars) => {
+      if (isTTY) {
+        process.stderr.write(`\r  Receiving tour plan... ${chars} chars`);
+      }
+    },
+    onDone: () => {
+      if (isTTY) {
+        process.stderr.write("\n");
+      }
+    },
+  });
+
+  console.error(`Received tour: "${plan.title}" (${plan.sections.length} sections)`);
+  console.error("");
+  console.error("Rendering HTML with syntax highlighting...");
   const html = await renderTour(plan);
 
   writeFileSync(args.output, html, "utf-8");
-  console.error(`Tour written to ${args.output}`);
+  const sizeKB = Math.round(html.length / 1024);
+  console.error(`Done! Written to ${args.output} (${sizeKB}KB)`);
 }
 
 // Run if this is the entry point
