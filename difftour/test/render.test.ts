@@ -124,4 +124,49 @@ describe("renderTour", () => {
     expect(html).toContain("@media");
     expect(html).toContain("768px");
   });
+
+  it("produces token-level syntax highlighting with language field", async () => {
+    const planWithLang: TourPlan = {
+      ...samplePlan,
+      sections: samplePlan.sections.map((s) => ({ ...s, language: "typescript" })),
+    };
+    const html = await renderTour(planWithLang);
+    // Should contain inline color styles from Shiki tokens
+    expect(html).toMatch(/style="color:#[0-9a-fA-F]+"/);
+    // Should still have diff line classes
+    expect(html).toContain("line-add");
+  });
+
+  it("falls back gracefully without a language field", async () => {
+    const planNoLang: TourPlan = {
+      title: "Test",
+      summary: "Test",
+      sections: [
+        {
+          heading: "Section",
+          explanation: "Explanation",
+          hunks: [
+            {
+              file: "data.unknown_ext_xyz",
+              startLine: 1,
+              endLine: 2,
+              diff: "@@ -1,1 +1,2 @@\n foo\n+bar",
+            },
+          ],
+        },
+      ],
+    };
+    const html = await renderTour(planNoLang);
+    expect(html).toContain("line-add");
+    expect(html).toContain("bar");
+  });
+
+  it("renders diff prefix markers for language-highlighted code", async () => {
+    const planWithLang: TourPlan = {
+      ...samplePlan,
+      sections: samplePlan.sections.map((s) => ({ ...s, language: "typescript" })),
+    };
+    const html = await renderTour(planWithLang);
+    expect(html).toContain("diff-prefix");
+  });
 });

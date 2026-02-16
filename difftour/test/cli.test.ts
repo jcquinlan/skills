@@ -94,8 +94,8 @@ describe("CLI", () => {
     expect(stderr).not.toContain("No input provided");
   });
 
-  it("package.json bin field maps difftour to src/cli.ts", async () => {
-    const pkg = await Bun.file(join(testDir, "package.json")).json();
-    expect(pkg.bin.difftour).toBe("src/cli.ts");
+  it("package.json bin field maps difftour to difftour/src/cli.ts", async () => {
+    const pkg = await Bun.file(join(testDir, "..", "package.json")).json();
+    expect(pkg.bin.difftour).toBe("difftour/src/cli.ts");
   });
 });

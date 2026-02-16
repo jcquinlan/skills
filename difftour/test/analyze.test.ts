@@ -174,6 +174,43 @@ describe("analyzeDiff", () => {
     expect(capture.prompt).toContain("My Custom Title");
   });
 
+  it("passes through language from LLM response", async () => {
+    process.env.ANTHROPIC_API_KEY = "test-key-123";
+
+    const responseWithLang = JSON.stringify({
+      title: "Add bar import",
+      summary: "This change adds a bar import.",
+      sections: [
+        { heading: "New import", explanation: "Added bar.", hunk_ids: [0], language: "typescript" },
+      ],
+    });
+
+    mock.module("@anthropic-ai/sdk", () => ({
+      default: class {
+        messages = { create: makeMockCreate(responseWithLang) };
+      },
+    }));
+
+    const { analyzeDiff } = await import("../src/analyze.ts");
+    const result = await analyzeDiff(sampleHunks);
+    expect(result.sections[0].language).toBe("typescript");
+  });
+
+  it("infers language from file extensions when LLM omits it", async () => {
+    process.env.ANTHROPIC_API_KEY = "test-key-123";
+
+    mock.module("@anthropic-ai/sdk", () => ({
+      default: class {
+        messages = { create: makeMockCreate(validLLMResponse) };
+      },
+    }));
+
+    const { analyzeDiff } = await import("../src/analyze.ts");
+    const result = await analyzeDiff(sampleHunks);
+    // sampleHunks has src/main.ts -> should infer "typescript"
+    expect(result.sections[0].language).toBe("typescript");
+  });
+
   it("includes numbered hunk references in the prompt", async () => {
     process.env.ANTHROPIC_API_KEY = "test-key-123";
 

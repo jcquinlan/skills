@@ -59,15 +59,18 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Ar
 .file-list{margin-bottom:1rem}
 .file-badge{display:inline-block;background:#161b22;border:1px solid #30363d;border-radius:4px;padding:2px 8px;font-family:"SF Mono",Consolas,"Liberation Mono",Menlo,monospace;font-size:0.8rem;color:#58a6ff;margin-right:0.5rem;margin-bottom:0.25rem}
 .diff-panel{background:#161b22;border:1px solid #30363d;border-radius:8px;padding:1rem;overflow-x:auto;margin-top:0.5rem}
-.diff-panel pre{margin:0;font-family:"SF Mono",Consolas,"Liberation Mono",Menlo,monospace;font-size:0.85rem;line-height:1.5}
-.diff-panel .line-add{background:rgba(63,185,80,0.15);color:#7ee787}
-.diff-panel .line-del{background:rgba(248,81,73,0.15);color:#ffa198}
-.diff-panel .line-hdr{color:#58a6ff;font-weight:bold}
-nav{display:flex;align-items:center;justify-content:center;gap:1rem;padding:1rem;background:#161b22;border-top:1px solid #30363d;position:fixed;bottom:0;left:0;right:0;height:60px}
-nav button{background:#21262d;color:#c9d1d9;border:1px solid #30363d;border-radius:6px;padding:0.4rem 1.2rem;font-size:0.9rem;cursor:pointer;transition:background 0.15s}
-nav button:hover{background:#30363d}
-nav button:disabled{opacity:0.4;cursor:default}
-.progress{font-size:0.9rem;color:#8b949e;min-width:60px;text-align:center}
+.diff-panel pre{margin:0;font-family:"SF Mono",Consolas,"Liberation Mono",Menlo,monospace;font-size:0.82rem;line-height:1.6;background:transparent!important}
+.diff-panel code{background:transparent}
+.diff-panel .line{display:block;padding:0 0.5rem}
+.diff-panel .line-add{background:rgba(63,185,80,0.10);border-left:3px solid rgba(63,185,80,0.6)}
+.diff-panel .line-del{background:rgba(248,81,73,0.10);border-left:3px solid rgba(248,81,73,0.6)}
+.diff-panel .line-hdr{color:#6e7681;font-style:italic;padding-top:0.4rem;padding-bottom:0.2rem}
+.diff-panel .diff-prefix{color:#484f58;user-select:none;margin-right:0.3rem}
+nav{display:flex;align-items:center;justify-content:center;gap:1rem;padding:1rem;background:transparent;border-top:1px solid #21262d;position:fixed;bottom:0;left:0;right:0;height:60px;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+nav button{background:rgba(33,38,45,0.6);color:#c9d1d9;border:1px solid #30363d;border-radius:6px;padding:0.4rem 1.2rem;font-size:0.85rem;cursor:pointer;transition:background 0.15s}
+nav button:hover{background:rgba(48,54,61,0.8)}
+nav button:disabled{opacity:0.3;cursor:default}
+.progress{font-size:0.85rem;color:#6e7681;min-width:60px;text-align:center}
 @media(max-width:768px){.slide{padding:1rem}.prose-panel h2{font-size:1.2rem}.diff-panel pre{font-size:0.75rem}}
 </style>
 </head>

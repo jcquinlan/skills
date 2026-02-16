@@ -13,6 +13,7 @@ export const SectionSchema = z.object({
   heading: z.string(),
   explanation: z.string(),
   hunks: z.array(HunkSchema),
+  language: z.string().optional(),
 });
 
 export type Section = z.infer<typeof SectionSchema>;
@@ -31,6 +32,7 @@ export const LLMSectionSchema = z.object({
   heading: z.string(),
   explanation: z.string(),
   hunk_ids: z.array(z.number()),
+  language: z.string().optional(),
 });
 
 export type LLMSection = z.infer<typeof LLMSectionSchema>;

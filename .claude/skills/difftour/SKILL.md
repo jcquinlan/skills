@@ -51,6 +51,7 @@ Write a JSON object matching this exact schema:
     {
       "heading": "string — short section heading",
       "explanation": "string — 2-4 sentences. Focus on WHY, not just WHAT. What problem does this solve? What was the reasoning? What tradeoffs were considered?",
+      "language": "string — optional, dominant source language for syntax highlighting (e.g. typescript, python, rust)",
       "hunks": [
         {
           "file": "string — file path",
@@ -71,6 +72,7 @@ Write a JSON object matching this exact schema:
 - **Write explanations that capture intent.** Bad: "Added a new function validateEmail." Good: "Email validation was missing from the signup flow, which meant invalid addresses could reach the database. This adds a Zod schema that catches malformed emails at the API boundary."
 - **Don't just echo the diff.** The reviewer can see the code — your job is to explain the thinking behind it.
 - **Keep hunks verbatim.** Copy the raw diff text exactly from the git output, including `@@` headers and `+`/`-` prefixes.
+- **Specify the language** for each section when possible (e.g. `"language": "typescript"`). This enables syntax highlighting of the actual source tokens, not just diff coloring. If omitted, the renderer infers it from file extensions.
 
 ### Step 4: Render the HTML
 
@@ -79,7 +81,7 @@ Parse the -o flag from arguments if present (default: `tour.html`).
 Write the TourPlan JSON to a temporary file and pipe it through the renderer:
 
 ```bash
-cat /tmp/difftour-plan.json | bun run src/render-tour.ts -o <output-file>
+cat /tmp/difftour-plan.json | bun run difftour/src/render-tour.ts -o <output-file>
 ```
 
 Use the Write tool to create `/tmp/difftour-plan.json` with the TourPlan JSON, then use Bash to run the render command.

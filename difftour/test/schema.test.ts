@@ -49,6 +49,16 @@ describe("SectionSchema", () => {
     expect(result.hunks).toHaveLength(1);
   });
 
+  it("accepts a section with an optional language field", () => {
+    const result = SectionSchema.parse({ ...validSection, language: "typescript" });
+    expect(result.language).toBe("typescript");
+  });
+
+  it("validates a section without language (optional)", () => {
+    const result = SectionSchema.parse(validSection);
+    expect(result.language).toBeUndefined();
+  });
+
   it("rejects a section missing heading", () => {
     expect(() => SectionSchema.parse({ explanation: "...", hunks: [] })).toThrow();
   });
@@ -97,6 +107,15 @@ describe("LLMTourPlanSchema", () => {
       sections: [{ heading: "S1", explanation: "E1", hunk_ids: [0, 2, 5] }],
     });
     expect(result.sections[0].hunk_ids).toEqual([0, 2, 5]);
+  });
+
+  it("accepts LLM sections with optional language field", () => {
+    const result = LLMTourPlanSchema.parse({
+      title: "Test",
+      summary: "Test summary",
+      sections: [{ heading: "S1", explanation: "E1", hunk_ids: [0], language: "python" }],
+    });
+    expect(result.sections[0].language).toBe("python");
   });
 
   it("rejects sections with hunks array instead of hunk_ids", () => {

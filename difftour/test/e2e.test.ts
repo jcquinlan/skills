@@ -67,6 +67,7 @@ const mockTourPlan: TourPlan = {
       heading: "New email validation module",
       explanation:
         "A new validators/email.ts file is created with a Zod schema for email validation. The module exports both the schema and a convenience function isValidEmail that wraps safeParse for boolean checks.",
+      language: "typescript",
       hunks: [
         {
           file: "src/validators/email.ts",
@@ -80,6 +81,7 @@ const mockTourPlan: TourPlan = {
       heading: "Signup handler integration",
       explanation:
         "The signup POST handler now imports the email schema and validates the email field before proceeding. Invalid emails receive a 400 response with a clear error message.",
+      language: "typescript",
       hunks: [
         {
           file: "src/handlers/signup.ts",
@@ -98,6 +100,7 @@ const mockTourPlan: TourPlan = {
     {
       heading: "Unit tests for email validation",
       explanation: "New test file covers both the happy path (valid emails accepted) and the error path (invalid emails rejected).",
+      language: "typescript",
       hunks: [
         {
           file: "test/validators/email.test.ts",

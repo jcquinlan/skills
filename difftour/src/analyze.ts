@@ -1,5 +1,5 @@
 import Anthropic from "@anthropic-ai/sdk";
-import type { ParsedHunk } from "./parse.ts";
+import { inferSectionLanguage, type ParsedHunk } from "./parse.ts";
 import { LLMTourPlanSchema, type TourPlan } from "./schema.ts";
 
 export interface AnalyzeOptions {
@@ -57,7 +57,8 @@ Return ONLY valid JSON matching this exact schema:
     {
       "heading": "string — short section heading",
       "explanation": "string — 2-4 sentences explaining this group of changes",
-      "hunk_ids": [0, 3, 5]
+      "hunk_ids": [0, 3, 5],
+      "language": "string — optional, dominant source language (e.g. typescript, python, rust)"
     }
   ]
 }
@@ -145,10 +146,8 @@ ${numberedHunks}`;
   return {
     title: llmPlan.title,
     summary: llmPlan.summary,
-    sections: llmPlan.sections.map((section) => ({
-      heading: section.heading,
-      explanation: section.explanation,
-      hunks: section.hunk_ids
+    sections: llmPlan.sections.map((section) => {
+      const sectionHunks = section.hunk_ids
         .filter((id) => id >= 0 && id < hunks.length)
         .map((id) => {
           const h = hunks[id];
@@ -158,7 +157,14 @@ ${numberedHunks}`;
             endLine: h.endLine,
             diff: h.diff,
           };
-        }),
-    })),
+        });
+      const files = sectionHunks.map((h) => h.file);
+      return {
+        heading: section.heading,
+        explanation: section.explanation,
+        hunks: sectionHunks,
+        language: section.language ?? inferSectionLanguage(files),
+      };
+    }),
   };
 }

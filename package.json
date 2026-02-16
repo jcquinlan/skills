@@ -1,10 +1,10 @@
 {
   "name": "difftour",
-  "module": "src/cli.ts",
+  "module": "difftour/src/cli.ts",
   "type": "module",
   "private": true,
   "bin": {
-    "difftour": "src/cli.ts"
+    "difftour": "difftour/src/cli.ts"
   },
   "devDependencies": {
     "@types/bun": "latest"

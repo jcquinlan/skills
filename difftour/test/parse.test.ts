@@ -1,5 +1,5 @@
 import { describe, expect, it } from "bun:test";
-import { parseDiff } from "../src/parse.ts";
+import { parseDiff, inferLanguage, inferSectionLanguage } from "../src/parse.ts";
 
 const singleFileSingleHunk = `diff --git a/src/main.ts b/src/main.ts
 index abc1234..def5678 100644
@@ -152,5 +152,53 @@ describe("parseDiff", () => {
       expect(typeof hunk.header).toBe("string");
       expect(typeof hunk.diff).toBe("string");
     }
+  });
+});
+
+describe("inferLanguage", () => {
+  it("maps .ts to typescript", () => {
+    expect(inferLanguage("src/main.ts")).toBe("typescript");
+  });
+
+  it("maps .tsx to tsx", () => {
+    expect(inferLanguage("components/App.tsx")).toBe("tsx");
+  });
+
+  it("maps .py to python", () => {
+    expect(inferLanguage("scripts/deploy.py")).toBe("python");
+  });
+
+  it("maps .rs to rust", () => {
+    expect(inferLanguage("src/lib.rs")).toBe("rust");
+  });
+
+  it("maps .css to css", () => {
+    expect(inferLanguage("styles/main.css")).toBe("css");
+  });
+
+  it("returns undefined for unknown extensions", () => {
+    expect(inferLanguage("file.xyz123")).toBeUndefined();
+  });
+
+  it("returns undefined for files without extension", () => {
+    expect(inferLanguage("Makefile")).toBeUndefined();
+  });
+});
+
+describe("inferSectionLanguage", () => {
+  it("returns the dominant language from file list", () => {
+    expect(inferSectionLanguage(["a.ts", "b.ts", "c.js"])).toBe("typescript");
+  });
+
+  it("returns the single language when all files match", () => {
+    expect(inferSectionLanguage(["a.py", "b.py"])).toBe("python");
+  });
+
+  it("returns undefined for empty file list", () => {
+    expect(inferSectionLanguage([])).toBeUndefined();
+  });
+
+  it("returns undefined when no files have recognized extensions", () => {
+    expect(inferSectionLanguage(["Makefile", "Dockerfile"])).toBeUndefined();
   });
 });
