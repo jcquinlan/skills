@@ -1,0 +1,20 @@
+{
+  "name": "difftour",
+  "module": "difftour/src/cli.ts",
+  "type": "module",
+  "private": true,
+  "bin": {
+    "difftour": "difftour/src/cli.ts"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.74.0",
+    "shiki": "^3.22.0",
+    "zod": "^4.3.6"
+  }
+}
