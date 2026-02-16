@@ -1,5 +1,5 @@
 {
-  "name": "difftour",
+  "name": "skills",
   "module": "difftour/src/cli.ts",
   "type": "module",
   "private": true,
