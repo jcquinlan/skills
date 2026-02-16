@@ -77,7 +77,9 @@ Write the complete progress.json file to `.harness/progress.json`.
   "version": 1,
   "config": {
     "max_prd_attempts": 3,
-    "max_total_iterations": 30
+    "max_total_iterations": 30,
+    "checkpoint_interval": 3,
+    "max_review_cycles": 2
   },
   "iteration": 0,
   "prds": [
@@ -92,9 +94,11 @@ Write the complete progress.json file to `.harness/progress.json`.
       "test_command": "command that exits 0 on success",
       "status": "pending",
       "attempts": 0,
+      "review_cycles": 0,
       "last_error": null
     }
   ],
+  "checkpoints": [],
   "log": []
 }
 ```
@@ -103,7 +107,7 @@ Write the complete progress.json file to `.harness/progress.json`.
 
 ```bash
 # Example: append new PRDs starting after prd-005
-jq '.prds += [{"id":"prd-006","title":"...","description":"...","acceptance_criteria":["..."],"test_command":"...","status":"pending","attempts":0,"last_error":null}]' .harness/progress.json > .harness/progress.tmp && mv .harness/progress.tmp .harness/progress.json
+jq '.prds += [{"id":"prd-006","title":"...","description":"...","acceptance_criteria":["..."],"test_command":"...","status":"pending","attempts":0,"review_cycles":0,"last_error":null}]' .harness/progress.json > .harness/progress.tmp && mv .harness/progress.tmp .harness/progress.json
 ```
 
 ## Output

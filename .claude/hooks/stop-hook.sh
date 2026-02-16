@@ -65,11 +65,26 @@ if [ -z "$NEXT_PRD_ID" ]; then
   NEXT_PRD_TITLE=$(jq -r '[.prds[] | select(.status == "in_progress")][0].title // empty' "$PROGRESS_FILE")
 fi
 
+# --- Read latest checkpoint (backward compatible) ---
+
+CHECKPOINT_PRD=$(jq -r '(.checkpoints // []) | if length > 0 then .[-1].after_prd else empty end' "$PROGRESS_FILE")
+CHECKPOINT_SUMMARY=$(jq -r '(.checkpoints // []) | if length > 0 then .[-1].summary else empty end' "$PROGRESS_FILE")
+
+# --- Build blocking message ---
+
 cat <<EOF
 HARNESS ACTIVE - Do not stop. Continue working on PRDs.
 
 Progress: $DONE done, $FAILED failed, $REMAINING remaining (of $TOTAL total)
 Iteration: $ITERATION / $MAX_ITERATIONS
+EOF
+
+# Include checkpoint line only if one exists
+if [ -n "$CHECKPOINT_PRD" ] && [ -n "$CHECKPOINT_SUMMARY" ]; then
+  printf '\nLatest checkpoint (after %s): %s\n' "$CHECKPOINT_PRD" "$CHECKPOINT_SUMMARY"
+fi
+
+cat <<EOF
 
 Next PRD: $NEXT_PRD_ID - $NEXT_PRD_TITLE
 
